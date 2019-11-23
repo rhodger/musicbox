@@ -10,11 +10,18 @@ fn main() {
     if (args.len() < 2){
         print!("Usage {} add arguments\n", args[0]);
     }else{
-        if (args[1] == "view_albums" && args.len() == 3){
+        if (args[1] == "display" && args.len() == 3){
             let mut collection: Collection = Collection::new();
             collection.parseFile(std::env::args().nth(2).unwrap());
             collection.display_albums();
+        }else if (args[1] == "find" && args.len() == 4){
+            let mut collection: Collection = Collection::new();
+            collection.parseFile(std::env::args().nth(2).unwrap());
+            collection.display_album((&std::env::args().nth(3).unwrap()[..]));
         }else{
+            for i in std::env::args(){
+                print!("{}\n", i);
+            }
             print!("Usage {} add arguments\n", args[0]);
         }
    }

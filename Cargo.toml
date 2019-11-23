@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 regex="1"
+custom_error = "1.7.1"
