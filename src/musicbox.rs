@@ -4,6 +4,13 @@ use std::io::{BufReader,BufRead};
 use std::fs::File;
 use regex::Regex;
 use str;
+use custom_error::custom_error;
+
+
+
+custom_error!{SearchError
+    not_found = "Couldn't find the desired item."
+}
 
 
 
@@ -47,6 +54,10 @@ impl Album{
     fn add(&mut self, x: Song){
         self.songs.push(x);
         self.length += 1;
+    }
+
+    fn getArtist(&self) -> &str{
+        return &self.artist;
     }
 
     
@@ -110,20 +121,19 @@ impl Collection{
         );
         for line in file.lines(){
             let nextLine: String = line.unwrap();
-            if (Regex::new(r"-").unwrap().is_match(&nextLine)){
+            if (Regex::new(r" - ").unwrap().is_match(&nextLine)){
                 let data: Vec<&str> =
                   Regex::new(r"\s{1}-\s{1}").unwrap()
                   .split(&nextLine).collect();
                 let song: Song = Song::new(
                   data[1].to_string(),
-                  album.artist.to_string(),
+                  String::from("DEFALT"),
                   convert_time(data[0])
                 );
             }else{
-                print!("Album complete; length: {}\n", album.length);
-                for song in &album.songs{
-                    print!("{}\n", song.name);
-                }
+                let data: Vec<&str> = Regex::new(r" : ").unwrap().split(&nextLine).collect();
+                album.name = String::from(data[0]);
+                album.artist = String::from(data[1]);
                 self.add(album);
                 album = Album::new(
                   String::from("DEFAULT"),
@@ -131,6 +141,15 @@ impl Collection{
                 );
             }
         }
+    }
+
+    fn find_album(&self, name: &str) -> Result<&Album, SearchError>{
+        for album in &self.albums{
+            if album.name == name{
+                return Ok(album);
+            }
+        }
+        return Err(SearchError::not_found);
     }
 
     /// Displays a save file as a list of albums.
@@ -141,7 +160,7 @@ impl Collection{
     }
 
     pub fn display_album(&self, album: &str){
-        //Empty for now
+        print!("Album: {}\n", self.find_album(album).expect("Couldn't locate Album.").name);
     }
 
     /// Constructs a new Collection
@@ -164,7 +183,7 @@ impl Collection{
 /// 
 /// ```
 /// let time: &str = String::from("00:1:20");
-/// print("{}", convert_time(time));
+/// print!("{}", convert_time(time));
 /// ```
 fn convert_time(time: &str) -> u16{
     let values: Vec<&str> = Regex::new(r":").unwrap().split(time).collect();
