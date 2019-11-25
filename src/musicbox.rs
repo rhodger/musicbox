@@ -37,6 +37,11 @@ pub struct Collection{
 
 
 impl Song{
+    fn display(&self){
+        print!("{} : {}", self.name, self.length);
+    }
+
+
     /// Constructs a new Song.
     fn new(n: String, a: String, l: u16) -> Song{
         let x = Song{
@@ -60,6 +65,13 @@ impl Album{
 
     fn display(&self){
         print!("{} - {} [{} songs]\n", self.name, self.artist, self.songs.len());
+    }
+
+    fn displaySongs(&self){
+        self.display();
+        for i in &self.songs{
+            i.display();
+        }
     }
 
     
@@ -163,7 +175,7 @@ impl Collection{
     }
 
     pub fn display_album(&self, album: &str){
-        self.find_album(album).expect("Couldn't locate Album.").display();
+        self.find_album(album).expect("Couldn't locate Album.").displaySongs();
     }
 
     /// Constructs a new Collection
