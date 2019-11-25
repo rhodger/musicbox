@@ -19,17 +19,18 @@ class Window(Frame):
         self.pack(fill=BOTH, expand=1)
 
         # creating a button instance
-        quitButton = Button(self, text="Quit")
-
-        # placing the button on my window
-        quitButton.place(x=0, y=0)
+        j = 0
+        for i in subprocess.check_output(["./musicbox", "display", "../../content/Albums.txt"]).decode('ASCII').splitlines():
+            quitButton = Button(self, text="Quit")
+            quitButton.place(x=0, y=(j*10))
+            j += 1
 
 root = Tk()
 
 #size of the window
 root.geometry("400x300")
 
-print(subprocess.check_output(["musicbox.exe", "find", "../../content/Albums.txt", "borgr"]).decode('ASCII'))
+print(subprocess.check_output(["./musicbox", "find", "../../content/Albums.txt", "borgr"]).decode('ASCII'))
 
 app = Window(root)
 root.mainloop()
