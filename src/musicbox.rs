@@ -25,7 +25,6 @@ struct Song{
 struct Album{
     name: String,
     artist: String,
-    length: u8,
     songs: Vec<Song>
 }
 
@@ -53,20 +52,21 @@ impl Album{
     /// Adds a new Song to this Album.
     fn add(&mut self, x: Song){
         self.songs.push(x);
-        self.length += 1;
     }
 
     fn getArtist(&self) -> &str{
         return &self.artist;
     }
 
+    fn display(&self){
+        print!("{} - {} [{} songs]\n", self.name, self.artist, self.songs.len());
+    }
     
     /// Constructs a new Album.
     fn new(n: String, a: String) -> Album{
         let new = Album{
             name: n,
             artist: a,
-            length: 0,
             songs: Vec::new()
         };
         return new;
@@ -130,6 +130,7 @@ impl Collection{
                   String::from("DEFALT"),
                   convert_time(data[0])
                 );
+                album.add(song);
             }else{
                 let data: Vec<&str> = Regex::new(r" : ").unwrap().split(&nextLine).collect();
                 album.name = String::from(data[0]);
