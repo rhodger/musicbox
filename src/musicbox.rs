@@ -38,7 +38,7 @@ pub struct Collection{
 
 impl Song{
     fn display(&self){
-        print!("{} : {}", self.name, self.length);
+        print!("{} : {}\n", self.name, to_timestamp(self.length));
     }
 
 
@@ -141,18 +141,16 @@ impl Collection{
                 let song: Song = Song::new(
                   data[1].to_string(),
                   String::from("DEFALT"),
-                  convert_time(data[0])
+                  to_seconds(data[0])
                 );
                 album.add(song);
             }else{
+                self.add(album);
                 let data: Vec<&str> =
                   Regex::new(r" : ").unwrap().split(&nextLine).collect();
-                album.name = String::from(data[1]);
-                album.artist = String::from(data[0]);
-                self.add(album);
                 album = Album::new(
-                  String::from("DEFAULT"),
-                  String::from("DEFALT")
+                  String::from(data[1]),
+                  String::from(data[0])
                 );
             }
         }
@@ -198,14 +196,21 @@ impl Collection{
 /// 
 /// ```
 /// let time: &str = String::from("00:1:20");
-/// print!("{}", convert_time(time));
+/// print!("{}", to_seconds(time));
 /// ```
-fn convert_time(time: &str) -> u16{
+fn to_seconds(time: &str) -> u16{
     let values: Vec<&str> = Regex::new(r":").unwrap().split(time).collect();
-    let totalTime: u16 = (
+    let seconds: u16 = (
       (values[0].parse::<u16>().unwrap() * 60 * 60) +
       (values[1].parse::<u16>().unwrap() * 60) +
       values[2].parse::<u16>().unwrap()
     );
-    return totalTime;
+    return seconds;
+}
+
+fn to_timestamp(seconds: u16) -> String{
+    let hours: u16 = seconds / 3600;
+    let minutes: u16 = (seconds % 3600) / 60;
+    let seconds: u16 = (seconds % 3600) % 60;
+    return format!("{}:{}:{}", hours, minutes, seconds);
 }
