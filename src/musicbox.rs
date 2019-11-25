@@ -60,6 +60,10 @@ impl Album{
         return &self.artist;
     }
 
+    fn display(&self){
+        print!("{} - {} [{} songs]\n", self.name, self.artist, self.length);
+    }
+
     
     /// Constructs a new Album.
     fn new(n: String, a: String) -> Album{
@@ -131,9 +135,10 @@ impl Collection{
                   convert_time(data[0])
                 );
             }else{
-                let data: Vec<&str> = Regex::new(r" : ").unwrap().split(&nextLine).collect();
-                album.name = String::from(data[0]);
-                album.artist = String::from(data[1]);
+                let data: Vec<&str> =
+                  Regex::new(r" : ").unwrap().split(&nextLine).collect();
+                album.name = String::from(data[1]);
+                album.artist = String::from(data[0]);
                 self.add(album);
                 album = Album::new(
                   String::from("DEFAULT"),
@@ -160,7 +165,7 @@ impl Collection{
     }
 
     pub fn display_album(&self, album: &str){
-        print!("Album: {}\n", self.find_album(album).expect("Couldn't locate Album.").name);
+        self.find_album(album).expect("Couldn't locate Album.").display();
     }
 
     /// Constructs a new Collection
