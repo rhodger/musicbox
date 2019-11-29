@@ -18,6 +18,10 @@ fn main() {
             let mut collection: Collection = Collection::new();
             collection.parseFile(std::env::args().nth(2).unwrap());
             collection.display_album((&std::env::args().nth(3).unwrap()[..]));
+        }else if(args[1] == "display" && args.len() == 2){
+            let mut collection: Collection = Collection::new();
+            collection.parseFile(std::env::args().nth(2).unwrap());
+            collection.display_albums();
         }else{
             for i in std::env::args(){
                 print!("{}\n", i);

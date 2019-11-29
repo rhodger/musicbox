@@ -161,7 +161,7 @@ impl Collection{
     }
 
     pub fn display_album(&self, album: &str){
-        print!("Album: {}\n", self.find_album(album).expect("Couldn't locate Album.").name);
+        self.find_album(album).expect("Couldn't find album").display();
     }
 
     /// Constructs a new Collection
