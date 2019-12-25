@@ -2,6 +2,7 @@ pub mod musicbox;
 
 use std::env;
 use musicbox::*;
+use clap::*;
 
 fn main() {
     let args: Vec<_> = env::args().collect();
