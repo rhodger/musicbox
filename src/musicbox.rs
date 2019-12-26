@@ -1,4 +1,7 @@
 //! A selection of tools for managing song data.
+//!
+//! Tools for manipulating formatted data representing information about a
+//! collection of music, using ASCII files as storage.
 
 use std::io::{BufReader,BufRead};
 use std::fs::File;
@@ -22,6 +25,8 @@ struct Song{
 }
 
 /// Holds a single Album.
+///
+/// Consists of a name, artist, and vector containing `Song`s.
 struct Album{
     name: String,
     artist: String,
@@ -29,6 +34,11 @@ struct Album{
 }
 
 /// Holds several Albums and allows for public interaction with them.
+///
+/// Consists only of a length and a vector containing `Album`s. This is the top-
+/// -level data structure for a 'collection' and should be considered more
+/// abstract than is necessary for the user to consider, at least in terms of
+/// outputting/UX.
 pub struct Collection{
     length: u16,
     albums: Vec<Album>
