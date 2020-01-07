@@ -29,9 +29,8 @@ fn main() {
                 print!("Usage {} find <collectionname> <searchterm>\n",args[0]);
             }
         }else if (args[1] == "add"){
-            let collection: Collection = Collection::new();
+            let mut collection: Collection = Collection::new();
             collection.parseFile(std::env::args().nth(2).unwrap());
-            collection.add_to_album(std::env::args().nth(
         }else{
             for i in std::env::args(){
                 print!("{}\n", i);
