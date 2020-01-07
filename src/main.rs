@@ -2,40 +2,22 @@ pub mod musicbox;
 
 use std::env;
 use musicbox::*;
+use clap::{Arg, App, SubCommand};
 
-fn main() {
-    let args: Vec<_> = env::args().collect();
-
-
-    if (args.len() < 2){
-        print!("Usage {} display/find\n\n", args[0]);
-    }else{
-        if (args[1] == "display"){
-            if (args.len() == 3){
-                let mut collection: Collection = Collection::new();
-                collection.parseFile(std::env::args().nth(2).unwrap());
-                collection.display_albums();
-            }else{
-                print!("Usage {} display <collectionname>\n", args[0]);
-            }
-        }else if (args[1] == "find"){
-            if (args.len() == 4){
-                let mut collection: Collection = Collection::new();
-                collection.parseFile(std::env::args().nth(2).unwrap());
-                collection.display_album(
-                  (&std::env::args().nth(3).unwrap()[..])
-                );
-            }else{
-                print!("Usage {} find <collectionname> <searchterm>\n",args[0]);
-            }
-        }else if (args[1] == "add"){
-            let mut collection: Collection = Collection::new();
-            collection.parseFile(std::env::args().nth(2).unwrap());
-        }else{
-            for i in std::env::args(){
-                print!("{}\n", i);
-            }
-            print!("Usage {} add/display\n", args[0]);
-        }
-   }
+fn main(){
+    let matches = App::new("Musicbox")
+      .version("0.1").author("SuedeGently")
+      .subcommand(SubCommand::with_name("display")
+        .arg(Arg::with_name("collection")
+          .required(true)
+          .index(1)
+          .help("Collection to be displayed")))
+      .get_matches();
+    if let display = matches.subcommand_matches("display").unwrap(){
+        let mut collection: Collection = Collection::new();
+        collection.parseFile(
+          display.value_of("collection").unwrap().to_string()
+        );
+        collection.display_albums();
+    }
 }
